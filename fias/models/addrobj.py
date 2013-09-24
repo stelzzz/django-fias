@@ -78,10 +78,23 @@ class AddrObj(Common):
     def __unicode__(self):
         return self.get_natural_name()
 
+    @property
     def full_address(self):
-	return self.full_name(5)
+        return self.full_name(5)
 
+    @property
+    def sphinx(self):
+        from fias.sphinxit import search
+        query = search().match('@aoguid "%s"' % self.aoguid, raw=True)
+        result = query.ask()
+        print result
+        items = result['result']['items']
+        print "!!!!!!!!!!!!!fdfd"
+        print items
 
+        return items
+
+        
 if 'mysql' in settings.DATABASES[FIAS_DATABASE_ALIAS]['ENGINE']:
     from fias.models.sphinx import AddrObjIndex
     __all__ = ['AddrObj', 'AddrObjIndex']
