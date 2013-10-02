@@ -82,6 +82,20 @@ class AddrObj(Common):
     def full_address(self):
         return self.full_name(5)
 
+    def get_city(self, formal=False):
+        if not self.parentguid or self.aolevel <= 1:
+            return None
+        parent = self
+        aolevel = self.aolevel
+        if aolevel == 4:
+            return self.get_formal_name()            
+        while aolevel >= 5:
+            parent = AddrObj.objects.get(pk=parent.parentguid)
+            aolevel = parent.aolevel
+            if aolevel == 4:
+                return parent.get_formal_name()            
+        return None
+
     @property
     def sphinx(self):
         from fias.sphinxit import search
